@@ -7,10 +7,10 @@ title:  Team
 
 
 ## USER 1
-***UCI Net ID***: ucinetid
+***Hui-Yim Tong***: huiyimt
 
 ## USER 2
-***UCI Net ID***: ucinetid
+***Trenton Coleman***: tcoleman
 
 ## USER 3
-***UCI Net ID***: ucinetid
+***Gordon Cheng***: ghcheng
