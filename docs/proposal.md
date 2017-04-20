@@ -3,7 +3,7 @@ layout: default
 title:  Proposal
 ---
 ## Summary
-We will be create a tetris game inside Minecraft. The inputs we would take in are: the current state, the incoming piece, and the next piece. It will output the placement and orientation of the incoming piece.
+We will be creating a tetris game inside Minecraft. The inputs we would take in are: the current state, the incoming piece, and the next piece. It will output the placement and orientation of the incoming piece.
 
 ## AI/ML Algorithms
 The algorithms we are thinking of using are genetic, simulated annealing, neural networks, and reinforcement learning.
