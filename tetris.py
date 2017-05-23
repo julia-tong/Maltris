@@ -4,6 +4,7 @@ import sys
 import time
 from random import randrange as rand
 import pickle
+import copy
 
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
 
@@ -239,7 +240,7 @@ class TetrisApp:
         return False
 
     def fake_drop(self):
-        fake_board = self.board[:]
+        fake_board = copy.deepcopy(self.board)
         fake_piece, fake_piece_x, fake_piece_y = self.piece, self.piece_x, self.piece_y
         
         while not check_collision(fake_board,
@@ -318,7 +319,7 @@ class TetrisApp:
         self.my_mission.drawLine(0,58,3,10,58,3,"obsidian")
         self.my_mission.drawLine(0,80,3,10,80,3,"obsidian")
 
-    def get_curr_state(self):
+    def get_curr_state(self, board):
         for i, row in enumerate(self.board[:-1]):
             if 0 not in row:
                 if i  == 0:
@@ -336,9 +337,10 @@ class TetrisApp:
                                        self.piece,
                                        (self.piece_x, self.piece_y)):
                     temp = self.fake_drop()
-                    print temp
-                    if temp not in actions:
-                        actions.append(temp)
+                    state = temp[-3:-1]
+                    state = [[1 if x!= 0 else x for x in row]for row in state]
+                    if state not in actions:
+                        actions.append(state)
                 self.piece_x += 1
                 self.piece_y = original_y
             self.rotate_piece()
