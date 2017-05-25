@@ -8,6 +8,12 @@ Since we've created a tetris board, we will take in the current state of the boa
 
 The main algorithm we're using for reinforcement learning is Q-learning.  
 
+The number of states that we have is the different combinations of pieces on the tetris board. It will always be changing for us because the board is constantly changing.
+
+The number of actions that we have is the different number of orientations and placements for the incoming piece.
+
+To calculate the reward, we currently have a reward map, where increasing height has a score of -8, holes have a score of -5, and clearing/completing a line as a score of 20. We take the linear combination of these 3 to determine the reward.
+
 ## Evaluation:
 We first generate a random seed for a predictable game so that each play will be similar through each iteration during training.  Then using a few runs, we evaluate against each in randomized moves, Q-learning, and a Neural Network, and a human player to determine how long in minutes or hours the player will survive.  We may also account for the number of lines cleared.
 
