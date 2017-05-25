@@ -3,32 +3,11 @@ layout: default
 title:  Home
 ---
 
-_Add your text here_
+Summary:
 
+Our project is to recreate tetris in Minecraft using Malmo. Our goal is to use a combination of reinforcement learning and neural networks for our AI. The game will be in survival mode, so our AI is not trying to win necessarily, but it will try to keep the game running as long as possible without having the blocks reach the very top.
 
-What's Markdown (`.md`)?
+[Source Code Repository][quickref1]
+[quickref1]: https://github.com/julia-tong/Maltris
 
-Markdown is markup that lets you write hypertext (HTML) documents
-in easy-to-read and easy-to-write plain text.
-No angle brackets `<></>` required for
-paragraphs, lists, blockquotes, tables, etc.
-
-
-This is a paragraph (in Markdown). Some more
-text here.
-
-This is another paragraph.
-
-This is a list:
-
-- Orange
-- Apple
-- Blueberry
-
-
-
-Just getting started with Markdown?
-See the [HTML <-> Markdown Quick Reference (Cheat Sheet)][quickref].
-
-
-[quickref]: https://github.com/mundimark/quickrefs/blob/master/HTML.md
+*Insert pictures here*
