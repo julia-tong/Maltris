@@ -1,2 +1,2 @@
-# 175project
-https://julia-tong.github.io/malmoAIproject/
+# Maltris (Tetris with Malmo)
+https://julia-tong.github.io/Maltris/
