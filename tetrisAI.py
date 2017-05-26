@@ -41,73 +41,73 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         </AgentSection>
     </Mission>'''
 
-    def pred_insta_drop(self):
-        fake_board = copy.deepcopy(self.board)
-        fake_piece, fake_piece_x, fake_piece_y = self.piece, self.piece_x, self.piece_y
-        
-        while not check_collision(fake_board,
-                           fake_piece,
-                           (fake_piece_x, fake_piece_y+1)):
-            fake_piece_y += 1
-            
+def pred_insta_drop(self):
+    fake_board = copy.deepcopy(self.board)
+    fake_piece, fake_piece_x, fake_piece_y = self.piece, self.piece_x, self.piece_y
+
+    while not check_collision(fake_board,
+                       fake_piece,
+                       (fake_piece_x, fake_piece_y+1)):
         fake_piece_y += 1
-        fake_board = join_matrixes(
-            fake_board,
-            fake_piece,
-            (fake_piece_x, fake_piece_y))
 
-        return fake_board
+    fake_piece_y += 1
+    fake_board = join_matrixes(
+        fake_board,
+        fake_piece,
+        (fake_piece_x, fake_piece_y))
 
-    def rand_rotate_piece(self):
-        val = rand(4)
-        new_piece = self.piece
-        for i in xrange(val):
-            new_piece = rotate_clockwise(new_piece)
-            if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
-                self.piece = new_piece
-            else: break
-    
-    def run(self):
-        states, actions, rewards = deque(), deque(), deque()
-        present_reward = 0
-        self.gameover = False
-        # Loop until mission ends:
+    return fake_board
 
-        num_iter = 1000
-        for i in xrange(num_iter):
-            #Prepare current actions and states
-            curr_state = self.get_curr_state(self, self.board)
-            possible_actions = self.AI.choose_action(curr_state)
-            curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
+def rand_rotate_piece(self):
+    val = rand(4)
+    new_piece = self.piece
+    for i in xrange(val):
+        new_piece = rotate_clockwise(new_piece)
+        if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
+            self.piece = new_piece
+        else: break
+
+def run(self):
+    states, actions, rewards = deque(), deque(), deque()
+    present_reward = 0
+    self.gameover = False
+    # Loop until mission ends:
+
+    num_iter = 1000
+    for i in xrange(num_iter):
+        #Prepare current actions and states
+        curr_state = self.get_curr_state(self, self.board)
+        possible_actions = self.AI.choose_action(curr_state)
+        curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
+        states.append(curr_state)
+        actions.append(curr_action)
+        reward.append(0)
+
+        while not self.gameover:
+            curr_reward = self.act(A[-1])
+            rewards.append(curr_reward)
+
+            curr_state = self.get_curr_state()
             states.append(curr_state)
-            actions.append(curr_action)
-            reward.append(0)
-            
-            while not self.gameover:
-                curr_reward = self.act(A[-1])
-                rewards.append(curr_reward)
+            possible_actions = self.get_possible_actions()
+            next_action = self.choose_action(curr_state, possible_actions, 0.3)
+            actions.append(next_action)
 
-                curr_state = self.get_curr_state()
-                states.append(curr_state)
-                possible_actions = self.get_possible_actions()
-                next_action = self.choose_action(curr_state, possible_actions, 0.3)
-                actions.append(next_action)
-                
-                time.sleep(0.1)
-                self.rand_move()
-                self.rand_rotate_piece()
-                self.insta_drop()
-                
-                self.world_state = self.agent_host.getWorldState()
-                for error in self.world_state.errors:
-                    print "Error:",error.text
+            time.sleep(0.1)
+            self.rand_move()
+            self.rand_rotate_piece()
+            self.insta_drop()
 
-            self.update_q_table(tau, states, actions, rewards, T)
+            self.world_state = self.agent_host.getWorldState()
+            for error in self.world_state.errors:
+                print "Error:",error.text
 
-        print self.score
-        print "Mission ended"
+        self.update_q_table(tau, states, actions, rewards, T)
 
-        # Mission has ended.
+    print self.score
+    print "Mission ended"
+
+    # Mission has ended.
 
 class TetrisAI:
     def __init__(self, alpha=0.3, gamma=1, n=1):
@@ -248,12 +248,12 @@ if __name__ == "__main__":
     #Initialize agent_host
     agent_host = MalmoPython.AgentHost()
     try:
-        self.agent_host.parse( sys.argv )
+        agent_host.parse( sys.argv )
     except RuntimeError as e:
         print("ERROR:",e)
-        print(self.agent_host.getUsage())
+        print(agent_host.getUsage())
         exit(1)
-    if self.agent_host.receivedArgument("help"):
+    if agent_host.receivedArgument("help"):
         print(agent_host.getUsage())
         exit(0)
 
@@ -267,10 +267,10 @@ if __name__ == "__main__":
     left_x, right_x = 0, 10
     bottom_y, top_y = 58, 80
     z_pos = 3
-    self.my_mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
-    self.my_mission.drawLine( right_x, bottom_y, z_pos, right_x, top_y, z_pos, "obsidian" )
-    self.my_mission.drawLine( left_x, bottom_y, z_pos, right_x, bottom_y, z_pos, "obsidian" )
-    self.my_mission.drawLine( left_x, top_y, z_pos, right_x, top_y, 3, "obsidian" )
+    mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
+    mission.drawLine( right_x, bottom_y, z_pos, right_x, top_y, z_pos, "obsidian" )
+    mission.drawLine( left_x, bottom_y, z_pos, right_x, bottom_y, z_pos, "obsidian" )
+    mission.drawLine( left_x, top_y, z_pos, right_x, top_y, 3, "obsidian" )
     
     #Attempt to start Mission
     max_retries = 3
