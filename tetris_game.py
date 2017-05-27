@@ -112,7 +112,7 @@ class TetrisGame:
 
     def drop(self, manual):
         if not self.gameover:
-            self.score += 1 if manual else 0
+            self.score = self.score_board() if manual else 0
             if check_collision(self.board,
                                self.piece,
                                (self.piece_x, self.piece_y+1)):
@@ -206,3 +206,30 @@ class TetrisGame:
             self.insta_drop()
 
         self.clear_draw_pieces()
+	return self.score
+
+    def score_board(self):
+        current_r = 0
+        height = 0
+        complete_lines = 0
+        holes = 0
+        
+        for row in self.board:
+            if (all(i == 0 for i in row) == False):
+                height += 1
+        current_r += height * rewards_map['inc_height']
+                
+        for row in self.board:
+            if (all(i != 0 for i in row)):
+                complete_lines += 1
+        current_r += complete_lines * rewards_map['clear_line']
+        
+        pieces = copy.deepcopy(self.board[rows - height:])
+        for i, row in enumerate(pieces):
+            if i != 0:
+                for index, item in enumerate(row):
+                    if item == 0 and pieces[i-1][index] != 0:
+                        holes += 1
+        current_r += holes * rewards_map['holes']
+        
+        return current_r
