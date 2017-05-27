@@ -5,8 +5,6 @@ import time
 from random import randrange as rand
 import copy
 
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
-
 rewards_map = {'inc_height': -8, 'clear_line': 20, 'holes': -5}
 
 colors = ["Lime_Wool", "Orange_Wool", "Blue_Wool", "Pink_Wool", "Red_Wool",
@@ -85,6 +83,11 @@ def check_collision(board, shape, offset):
                 return True
     return False
 
+def new_board():
+    board = [ [ 0 for x in xrange(cols) ]
+              for y in xrange(rows) ]
+    board += [[ 1 for x in xrange(cols)]]
+    return board
 
 def remove_row(board, row):
     print "row removed"
@@ -100,11 +103,12 @@ def join_matrixes(mat1, mat2, mat2_off):
     
 class TetrisGame:
     def __init__(self, agent_host):
-        self.agent = self.agent_host
+        self.agent_host = agent_host
         self.width = cols+6
         self.height = rows
         self.rlim = cols
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
+        self.setup()
         self.start_game()
 
     def setup(self):
@@ -113,6 +117,7 @@ class TetrisGame:
         self.level = 1
         self.score = 0
         self.lines = 0
+        self.gameover = False
             
     def new_piece(self):
         self.piece = self.next_piece[:]
@@ -194,8 +199,27 @@ class TetrisGame:
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 air")
-    
-    def run(self, player):
+    def rand_move(self):
+        if not self.gameover:
+            new_x = rand(10)
+            if not check_collision(self.board,
+                                  self.piece,
+                                  (new_x, self.piece_y)):
+                self.piece_x = new_x
+                return True
+            else:
+                return False
+
+    def rand_rotate_piece(self):
+        val = rand(4)
+        new_piece = self.piece
+        for i in xrange(val):
+            new_piece = rotate_clockwise(new_piece)
+            if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
+                self.piece = new_piece
+            else: break
+            
+    def run(self):
         self.gameover = False
         # Loop until mission ends:
             
@@ -208,8 +232,5 @@ class TetrisGame:
             self.world_state = self.agent_host.getWorldState()
             for error in self.world_state.errors:
                 print "Error:",error.text
-
-        print self.score
-        print "Mission ended"
 
         # Mission has ended.
