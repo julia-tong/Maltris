@@ -55,7 +55,7 @@ def check_collision(board, shape, offset):
 def new_board():
     board = [ [ 0 for x in xrange(cols) ]
               for y in xrange(rows) ]
-    board += [[ 1 for x in xrange(cols)]]
+    #board += [[ 1 for x in xrange(cols)]]
     return board
 
 def remove_row(board, row):
@@ -78,6 +78,7 @@ class TetrisGame:
         self.rlim = cols
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.setup()
+        self.clear_draw_pieces()
         self.start_game()
 
     def setup(self):
@@ -93,7 +94,6 @@ class TetrisGame:
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.piece_x = int(cols/2 - len(self.piece[0])/2)
         self.piece_y = 0
-
         self.draw_piece()
         if check_collision(self.board, self.piece, (self.piece_x, self.piece_y)):
             self.gameover = True
@@ -168,6 +168,12 @@ class TetrisGame:
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 air")
+    def clear_draw_pieces(self):
+        for cy, row in enumerate(self.board):
+            for cx, col in enumerate(row):
+                if (self.board[cy][cx] != 0):
+                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " " + str(80 - cy) + " 3 air")
+
     def rand_move(self):
         if not self.gameover:
             new_x = rand(10)
@@ -190,16 +196,13 @@ class TetrisGame:
             
     def run(self):
         self.gameover = False
-        # Loop until mission ends:
-            
+        # Loop until Gameover
+        print("game running")
         while not self.gameover:
-            time.sleep(0.1)
-            self.rand_move()
-            self.rand_rotate_piece()
+            time.sleep(.1)
+            #--------Random play-------#
+            #self.rand_move()
+            #self.rand_rotate_piece()
             self.insta_drop()
-            
-            self.world_state = self.agent_host.getWorldState()
-            for error in self.world_state.errors:
-                print "Error:",error.text
 
-        # Mission has ended.
+        self.clear_draw_pieces()

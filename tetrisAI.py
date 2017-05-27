@@ -29,7 +29,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <DrawingDecorator>
                     <DrawLine x1="5" y1="56" z1="22" x2="5" y2="66" z2="22" type="obsidian"/>
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="20000"/>
+                <ServerQuitFromTimeUp timeLimitMs="600000"/>
                 <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
         </ServerSection>
