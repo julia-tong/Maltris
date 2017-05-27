@@ -20,12 +20,15 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <ServerSection>
                     <ServerInitialConditions>
                 <Time>
-                    <StartTime>12000</StartTime>
+                    <StartTime>1000</StartTime>
                     <AllowPassageOfTime>false</AllowPassageOfTime>
                 </Time>
             </ServerInitialConditions>
             <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"/>
+                <DrawingDecorator>
+                    <DrawLine x1="5" y1="56" z1="22" x2="5" y2="66" z2="22" type="obsidian"/>
+                </DrawingDecorator>
                 <ServerQuitFromTimeUp timeLimitMs="20000"/>
                 <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
@@ -33,12 +36,11 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <AgentSection mode="Creative">
             <Name>MalmoTutorialBot</Name>
             <AgentStart>
-                <Placement x="10" y="56" z="-27" yaw="0"/>
+                <Placement x="5" y="67" z="22.8" yaw="180"/>
             </AgentStart>
             <AgentHandlers>
                 <ObservationFromFullStats/>
                 <ContinuousMovementCommands turnSpeedDegs="180"/>
-                
             </AgentHandlers>
         </AgentSection>
     </Mission>'''
@@ -60,54 +62,54 @@ def pred_insta_drop(self):
 
     return fake_board
 
-def rand_rotate_piece(self):
-    val = rand(4)
-    new_piece = self.piece
-    for i in xrange(val):
-        new_piece = rotate_clockwise(new_piece)
-        if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
-            self.piece = new_piece
-        else: break
+# def rand_rotate_piece(self):
+#     val = rand(4)
+#     new_piece = self.piece
+#     for i in xrange(val):
+#         new_piece = rotate_clockwise(new_piece)
+#         if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
+#             self.piece = new_piece
+#         else: break
 
-def run(self):
-    states, actions, rewards = deque(), deque(), deque()
-    present_reward = 0
-    self.gameover = False
-    # Loop until mission ends:
-
-    num_iter = 1000
-    for i in xrange(num_iter):
-        #Prepare current actions and states
-        curr_state = self.get_curr_state(self, self.board)
-        possible_actions = self.AI.choose_action(curr_state)
-        curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
-        states.append(curr_state)
-        actions.append(curr_action)
-        reward.append(0)
-
-        while not self.gameover:
-            curr_reward = self.act(A[-1])
-            rewards.append(curr_reward)
-
-            curr_state = self.get_curr_state()
-            states.append(curr_state)
-            possible_actions = self.get_possible_actions()
-            next_action = self.choose_action(curr_state, possible_actions, 0.3)
-            actions.append(next_action)
-
-            time.sleep(0.1)
-            self.rand_move()
-            self.rand_rotate_piece()
-            self.insta_drop()
-
-            self.world_state = self.agent_host.getWorldState()
-            for error in self.world_state.errors:
-                print "Error:",error.text
-
-        self.update_q_table(tau, states, actions, rewards, T)
-
-    print self.score
-    print "Mission ended"
+# def run(self):
+#     states, actions, rewards = deque(), deque(), deque()
+#     present_reward = 0
+#     self.gameover = False
+#     # Loop until mission ends:
+#
+#     num_iter = 1000
+#     for i in xrange(num_iter):
+#         #Prepare current actions and states
+#         curr_state = self.get_curr_state(self, self.board)
+#         possible_actions = self.AI.choose_action(curr_state)
+#         curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
+#         states.append(curr_state)
+#         actions.append(curr_action)
+#         reward.append(0)
+#
+#         while not self.gameover:
+#             curr_reward = self.act(A[-1])
+#             rewards.append(curr_reward)
+#
+#             curr_state = self.get_curr_state()
+#             states.append(curr_state)
+#             possible_actions = self.get_possible_actions()
+#             next_action = self.choose_action(curr_state, possible_actions, 0.3)
+#             actions.append(next_action)
+#
+#             time.sleep(0.1)
+#             self.rand_move()
+#             self.rand_rotate_piece()
+#             self.insta_drop()
+#
+#             self.world_state = self.agent_host.getWorldState()
+#             for error in self.world_state.errors:
+#                 print "Error:",error.text
+#
+#         self.update_q_table(tau, states, actions, rewards, T)
+#
+#     print self.score
+#     print "Mission ended"
 
     # Mission has ended.
 
@@ -269,13 +271,15 @@ if __name__ == "__main__":
     mission_record = MalmoPython.MissionRecordSpec()
 
     #Build Tetris Board
-    left_x, right_x = 0, 10
-    bottom_y, top_y = 58, 80
+    left_x, right_x = -1, 10
+    bottom_y, top_y = 58, 81
     z_pos = 3
     mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
     mission.drawLine( right_x, bottom_y, z_pos, right_x, top_y, z_pos, "obsidian" )
     mission.drawLine( left_x, bottom_y, z_pos, right_x, bottom_y, z_pos, "obsidian" )
-    mission.drawLine( left_x, top_y, z_pos, right_x, top_y, 3, "obsidian" )
+    mission.drawLine( left_x, top_y, z_pos, right_x, top_y, z_pos, "obsidian" )
+    for i in range(-1,10):
+        mission.drawLine(i, bottom_y, z_pos-1, i, top_y, z_pos-1, "quartz_block")
     
     #Attempt to start Mission
     max_retries = 3
@@ -307,5 +311,5 @@ if __name__ == "__main__":
     my_AI = TetrisAI()
     my_game = TetrisGame(agent_host)
     print("n=", n)
-    for i in range(numIter):
+    for n in range(numIter):
         my_AI.run(agent_host, my_game)

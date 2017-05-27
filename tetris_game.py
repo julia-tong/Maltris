@@ -10,37 +10,6 @@ rewards_map = {'inc_height': -8, 'clear_line': 20, 'holes': -5}
 colors = ["Lime_Wool", "Orange_Wool", "Blue_Wool", "Pink_Wool", "Red_Wool",
           "Magenta_Wool", "Yellow_Wool"]
 
-missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-    <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <About>
-            <Summary>Tetris!</Summary>
-        </About>
-        <ServerSection>
-                    <ServerInitialConditions>
-                <Time>
-                    <StartTime>12000</StartTime>
-                    <AllowPassageOfTime>false</AllowPassageOfTime>
-                </Time>
-            </ServerInitialConditions>
-            <ServerHandlers>
-                <FlatWorldGenerator generatorString="3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"/>
-                <ServerQuitFromTimeUp timeLimitMs="20000"/>
-                <ServerQuitWhenAnyAgentFinishes/>
-            </ServerHandlers>
-        </ServerSection>
-        <AgentSection mode="Creative">
-            <Name>MalmoTutorialBot</Name>
-            <AgentStart>
-                <Placement x="10" y="56" z="-27" yaw="0"/>
-            </AgentStart>
-            <AgentHandlers>
-                <ObservationFromFullStats/>
-                <ContinuousMovementCommands turnSpeedDegs="180"/>
-                
-            </AgentHandlers>
-        </AgentSection>
-    </Mission>'''
-
 cols = 10
 rows = 22
 
