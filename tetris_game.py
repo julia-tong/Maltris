@@ -55,7 +55,7 @@ def check_collision(board, shape, offset):
 def new_board():
     board = [ [ 0 for x in xrange(cols) ]
               for y in xrange(rows) ]
-    #board += [[ 1 for x in xrange(cols)]]
+    board += [[ 1 for x in xrange(cols)]]
     return board
 
 def remove_row(board, row):
@@ -169,7 +169,7 @@ class TetrisGame:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 air")
     def clear_draw_pieces(self):
-        for cy, row in enumerate(self.board):
+        for cy, row in enumerate(self.board[:-1]):
             for cx, col in enumerate(row):
                 if (self.board[cy][cx] != 0):
                     self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " " + str(80 - cy) + " 3 air")
