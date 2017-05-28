@@ -62,56 +62,59 @@ def pred_insta_drop(self):
 
     return fake_board
 
-# def rand_rotate_piece(self):
-#     val = rand(4)
-#     new_piece = self.piece
-#     for i in xrange(val):
-#         new_piece = rotate_clockwise(new_piece)
-#         if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
-#             self.piece = new_piece
-#         else: break
+def rand_rotate_piece(self):
+     val = rand(4)
+     new_piece = self.piece
+     for i in xrange(val):
+         new_piece = rotate_clockwise(new_piece)
+         if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
+             self.piece = new_piece
+         else: break
 
-# def run(self):
-#     states, actions, rewards = deque(), deque(), deque()
-#     present_reward = 0
-#     self.gameover = False
-#     # Loop until mission ends:
-#
-#     num_iter = 1000
-#     for i in xrange(num_iter):
-#         #Prepare current actions and states
-#         curr_state = self.get_curr_state(self, self.board)
-#         possible_actions = self.AI.choose_action(curr_state)
-#         curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
-#         states.append(curr_state)
-#         actions.append(curr_action)
-#         reward.append(0)
-#
-#         while not self.gameover:
-#             curr_reward = self.act(A[-1])
-#             rewards.append(curr_reward)
-#
-#             curr_state = self.get_curr_state()
-#             states.append(curr_state)
-#             possible_actions = self.get_possible_actions()
-#             next_action = self.choose_action(curr_state, possible_actions, 0.3)
-#             actions.append(next_action)
-#
-#             time.sleep(0.1)
-#             self.rand_move()
-#             self.rand_rotate_piece()
-#             self.insta_drop()
-#
-#             self.world_state = self.agent_host.getWorldState()
-#             for error in self.world_state.errors:
-#                 print "Error:",error.text
-#
-#         self.update_q_table(tau, states, actions, rewards, T)
-#
-#     print self.score
-#     print "Mission ended"
+def run(self):
+     states, actions, rewards = deque(), deque(), deque()
+     present_reward = 0
+     self.gameover = False
+     # Loop until mission ends:
+
+     num_iter = 1000
+     for i in xrange(num_iter):
+         #Prepare current actions and states
+         curr_state = self.get_curr_state(self, self.board)
+         possible_actions = self.AI.choose_action(curr_state)
+         curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
+         states.append(curr_state)
+         actions.append(curr_action)
+         reward.append(0)
+
+         while not self.gameover:
+             curr_reward = self.act(A[-1])
+             rewards.append(curr_reward)
+
+             curr_state = self.get_curr_state()
+             states.append(curr_state)
+             possible_actions = self.get_possible_actions()
+             next_action = self.choose_action(curr_state, possible_actions, 0.3)
+             actions.append(next_action)
+
+             time.sleep(0.1)
+             self.rand_move()
+             self.rand_rotate_piece()
+             self.insta_drop()
+
+             self.world_state = self.agent_host.getWorldState()
+             for error in self.world_state.errors:
+                 print "Error:",error.text
+
+         self.update_q_table(tau, states, actions, rewards, T)
+
+     print self.score
+     print "Mission ended"
 
     # Mission has ended.
+    
+def magic(X):
+    return ''.join(str(i) for i in X)
 
 class TetrisAI:
     def __init__(self, alpha=0.3, gamma=1, n=1):
@@ -159,17 +162,18 @@ class TetrisAI:
                     break
                 
     def act(self, game, action):
-        print("test")
         game.run()
+
+        return 1
         
 
     def get_curr_state(self, tetris_game):
-        for i, row in enumerate(tetris_game.board[:-1]):
+        for i, row in enumerate(tetris_game.board[::-1]):
             if 0 not in row:
                 if i  == 0:
-                    return tetris_game.board[-1:1]
+                    return tetris_game.board[-2:]
                 else:
-                    return tetris_game.board[i:i+1]
+                    return tetris_game.board[i:i+2]
                 
     def get_possible_actions(self, my_game):
         actions = []
@@ -216,12 +220,14 @@ class TetrisAI:
 
         return new_board
     
-    def choose_action(self, curr_state, possible_actions):
+    def choose_action(self, state, possible_actions):
+        curr_state = magic(state)
         if curr_state not in self.q_table:
             self.q_table[curr_state] = {}
-        '''for action in possible_actions:
-            if action not in self.q_table[curr_state]:
-                self.q_table[curr_state][action] = 0'''
+        for action in possible_actions:
+            t_action = magic(action)
+            if t_action not in self.q_table[curr_state]:
+                self.q_table[curr_state][t_action] = 0
 
         rnd = random.random()
         if rnd < self.epsilon:
@@ -230,24 +236,24 @@ class TetrisAI:
         else:
             best_actions = [possible_actions[0]]
             qvals = self.q_table[curr_state]
-            '''for action in possible_actions:
-                if qvals[action] > qvals[best_actions[0]]:
+            for t_action in possible_actions:
+                action = magic(t_action)
+                if qvals[action] > qvals[magic(best_actions[0])]:
                     best_actions = [action]
-                elif qvals[action] == qvals[best_action[0]]:
-                    best_actions.append(action)'''
+                elif qvals[action] == qvals[magic(best_actions[0])]:
+                    best_actions.append(action)
             a = random.randint(0, len(best_actions) - 1)
             best_action = best_actions[a]
         return best_action
 
     def update_q_table(self, tau, S, A, R, T):
-        pass
-'''        curr_s, curr_a, curr_r = S.popleft(), A.popleft(), R.popleft()
+        curr_s, curr_a, curr_r = magic(S.popleft()), magic(A.popleft()), R.popleft()
         G = sum([self.gamma ** i * R[i] for i in range(len(S))])
         if tau + self.n < T:
-            G += self.gamma ** self.n * self.q_table[S[-1]][A[-1]]
+            G += self.gamma ** self.n * self.q_table[magic(S[-1])][magic(A[-1])]
 
         old_q = self.q_table[curr_s][curr_a]
-        self.q_table[curr_s][curr_a] = old_q + self.alpha* (G - old_q)'''
+        self.q_table[curr_s][curr_a] = old_q + self.alpha* (G - old_q)
     
 if __name__ == "__main__":
     random.seed(0)
@@ -313,3 +319,4 @@ if __name__ == "__main__":
     print("n=", n)
     for n in range(numIter):
         my_AI.run(agent_host, my_game)
+    print(my_AI.q_table)
