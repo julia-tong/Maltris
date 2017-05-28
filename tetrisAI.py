@@ -64,7 +64,6 @@ class TetrisAI:
             init_action = self.choose_action(init_state, possible_actions)
             states.append(init_state)
             actions.append(init_action)
-            print(actions)
             rewards.append(0)
 
             T = sys.maxint
@@ -95,7 +94,7 @@ class TetrisAI:
                     break
                 
     def act(self, game, action):
-        game.move(action[0] - game.rlim)
+        game.move(action[0] - game.piece_x)
         for i in range(action[1]):
             game.rotate_piece()
         game.insta_drop()
@@ -206,6 +205,7 @@ class TetrisAI:
                     best_actions.append(action)
             a = random.randint(0, len(best_actions) - 1)
             best_action = best_actions[a]
+            print(best_action)
         return best_action
 
     def update_q_table(self, tau, S, A, R, T):
