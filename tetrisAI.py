@@ -44,74 +44,6 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
             </AgentHandlers>
         </AgentSection>
     </Mission>'''
-
-def pred_insta_drop(self):
-    fake_board = copy.deepcopy(self.board)
-    fake_piece, fake_piece_x, fake_piece_y = self.piece, self.piece_x, self.piece_y
-
-    while not check_collision(fake_board,
-                       fake_piece,
-                       (fake_piece_x, fake_piece_y+1)):
-        fake_piece_y += 1
-
-    fake_piece_y += 1
-    fake_board = join_matrixes(
-        fake_board,
-        fake_piece,
-        (fake_piece_x, fake_piece_y))
-
-    return fake_board
-
-def rand_rotate_piece(self):
-     val = rand(4)
-     new_piece = self.piece
-     for i in xrange(val):
-         new_piece = rotate_clockwise(new_piece)
-         if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
-             self.piece = new_piece
-         else: break
-
-def run(self):
-     states, actions, rewards = deque(), deque(), deque()
-     present_reward = 0
-     self.gameover = False
-     # Loop until mission ends:
-
-     num_iter = 1000
-     for i in xrange(num_iter):
-         #Prepare current actions and states
-         curr_state = self.get_curr_state(self, self.board)
-         possible_actions = self.AI.choose_action(curr_state)
-         curr_action = self.AI.choose_action(curr_state, possible_actions, 0.3)
-         states.append(curr_state)
-         actions.append(curr_action)
-         reward.append(0)
-
-         while not self.gameover:
-             curr_reward = self.act(A[-1])
-             rewards.append(curr_reward)
-
-             curr_state = self.get_curr_state()
-             states.append(curr_state)
-             possible_actions = self.get_possible_actions()
-             next_action = self.choose_action(curr_state, possible_actions, 0.3)
-             actions.append(next_action)
-
-             time.sleep(0.1)
-             self.rand_move()
-             self.rand_rotate_piece()
-             self.insta_drop()
-
-             self.world_state = self.agent_host.getWorldState()
-             for error in self.world_state.errors:
-                 print "Error:",error.text
-
-         self.update_q_table(tau, states, actions, rewards, T)
-
-     print self.score
-     print "Mission ended"
-
-    # Mission has ended.
     
 def magic(X):
     return ''.join(str(i) for i in X)
@@ -162,7 +94,7 @@ class TetrisAI:
                     break
                 
     def act(self, game, action):
-        game.run()
+        game.act(action)
 
         return 1
         
@@ -171,9 +103,13 @@ class TetrisAI:
         for i, row in enumerate(tetris_game.board[::-1]):
             if 0 not in row:
                 if i  == 0:
-                    return tetris_game.board[-2:]
+                    new_state = tetris_game.board[-2:]
+                    new_state = [[1 if x!= 0 else x for x in row]for row in new_state]
+                    return new_state
                 else:
-                    return tetris_game.board[i:i+2]
+                    new_state = tetris_game.board[i:i+2]
+                    new_state = [[1 if x!= 0 else x for x in row]for row in new_state]
+                    return new_state
                 
     def get_possible_actions(self, my_game):
         actions = []
@@ -254,6 +190,7 @@ class TetrisAI:
 
         old_q = self.q_table[curr_s][curr_a]
         self.q_table[curr_s][curr_a] = old_q + self.alpha* (G - old_q)
+        print(self.q_table)
     
 if __name__ == "__main__":
     random.seed(0)
