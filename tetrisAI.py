@@ -64,6 +64,7 @@ class TetrisAI:
             init_action = self.choose_action(init_state, possible_actions)
             states.append(init_state)
             actions.append(init_action)
+            print(actions)
             rewards.append(0)
 
             T = sys.maxint
@@ -94,10 +95,11 @@ class TetrisAI:
                     break
                 
     def act(self, game, action):
-        game.act(action)
-
-        return 1
-        
+        game.move(action[0] - game.rlim)
+        for i in range(action[1]):
+            game.rotate_piece()
+        game.insta_drop()
+        return game.score()
 
     def get_curr_state(self, tetris_game):
         for i, row in enumerate(tetris_game.board[::-1]):
@@ -115,6 +117,7 @@ class TetrisAI:
         actions = []
         piece = my_game.piece
         piece_x, piece_y = my_game.piece_x, my_game.piece_y
+        action = (0,0)
         
         for i in range(4):
             piece_x = 0
@@ -122,17 +125,42 @@ class TetrisAI:
                 if not check_collision(my_game.board,
                                        piece,
                                        (piece_x, piece_y)):
-                    new_state = self.pred_insta_drop(piece, piece_x, piece_y, my_game.board)
-                    new_state = new_state[-3:-1] #Retrieves the bottom two rows
-                    new_state = [[1 if x!= 0 else x for x in row]for row in new_state]
-                    if new_state not in actions:
-                        actions.append(new_state)
+                    if action not in actions:
+                        actions.append(action)
                 piece_x += 1
+                action = (action[0]+1, action[1])
                 piece_y = my_game.piece_y
             piece = self.rotate_piece(piece, piece_x, piece_y, my_game.board)
-        
+            action = (0, action[1]+1)
+
         return actions
 
+    def score(self, board):
+        current_r = 0
+        height = 0
+        complete_lines = 0
+        holes = 0
+        
+        for row in board:
+            if (all(i == 0 for i in row) == False):
+                height += 1
+        current_r += height * rewards_map['inc_height']
+                
+        for row in board:
+            if (all(i != 0 for i in row)):
+                complete_lines += 1
+        current_r += complete_lines * rewards_map['clear_line']
+        
+        pieces = copy.deepcopy(board[rows - height:])
+        for i, row in enumerate(pieces):
+            if i != 0:
+                for index, item in enumerate(row):
+                    if item == 0 and pieces[i-1][index] != 0:
+                        holes += 1
+        current_r += holes * rewards_map['holes']
+        
+        return current_r
+    
     def rotate_piece(self, piece, piece_x, piece_y, board):
         new_piece = rotate_clockwise(piece)
         if not check_collision(board, new_piece, (piece_x, piece_y)):
@@ -161,9 +189,8 @@ class TetrisAI:
         if curr_state not in self.q_table:
             self.q_table[curr_state] = {}
         for action in possible_actions:
-            t_action = magic(action)
-            if t_action not in self.q_table[curr_state]:
-                self.q_table[curr_state][t_action] = 0
+            if action not in self.q_table[curr_state]:
+                self.q_table[curr_state][action] = 0
 
         rnd = random.random()
         if rnd < self.epsilon:
@@ -172,25 +199,23 @@ class TetrisAI:
         else:
             best_actions = [possible_actions[0]]
             qvals = self.q_table[curr_state]
-            for t_action in possible_actions:
-                action = magic(t_action)
-                if qvals[action] > qvals[magic(best_actions[0])]:
+            for action in possible_actions:
+                if qvals[action] > qvals[best_actions[0]]:
                     best_actions = [action]
-                elif qvals[action] == qvals[magic(best_actions[0])]:
+                elif qvals[action] == qvals[best_actions[0]]:
                     best_actions.append(action)
             a = random.randint(0, len(best_actions) - 1)
             best_action = best_actions[a]
         return best_action
 
     def update_q_table(self, tau, S, A, R, T):
-        curr_s, curr_a, curr_r = magic(S.popleft()), magic(A.popleft()), R.popleft()
+        curr_s, curr_a, curr_r = magic(S.popleft()), A.popleft(), R.popleft()
         G = sum([self.gamma ** i * R[i] for i in range(len(S))])
         if tau + self.n < T:
-            G += self.gamma ** self.n * self.q_table[magic(S[-1])][magic(A[-1])]
+            G += self.gamma ** self.n * self.q_table[magic(S[-1])][A[-1]]
 
         old_q = self.q_table[curr_s][curr_a]
         self.q_table[curr_s][curr_a] = old_q + self.alpha* (G - old_q)
-        print(self.q_table)
     
 if __name__ == "__main__":
     random.seed(0)
