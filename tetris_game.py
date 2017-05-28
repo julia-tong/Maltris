@@ -85,7 +85,6 @@ class TetrisGame:
         self.board = new_board()
         self.new_piece()
         self.level = 1
-        self.score = 0
         self.lines = 0
         self.gameover = False
             
@@ -103,7 +102,7 @@ class TetrisGame:
             new_x = self.piece_x + delta_x
             if new_x < 0:
                 new_x = 0
-            if x_new > cols - len(self.piece[0]):
+            if new_x > cols - len(self.piece[0]):
                 new_x = cols - len(self.piece[0])
             if not check_collision(self.board,
                                    self.piece,
@@ -112,7 +111,6 @@ class TetrisGame:
 
     def drop(self, manual):
         if not self.gameover:
-            self.score = self.score_board() if manual else 0
             if check_collision(self.board,
                                self.piece,
                                (self.piece_x, self.piece_y+1)):
@@ -130,6 +128,7 @@ class TetrisGame:
                     for i, row in enumerate(self.board[:-1]):
                         if 0 not in row:
                             self.board = remove_row(self.board, i)
+                            self.draw_piece2(self.board)
                             clear_rows += 1
                             check_board = True
                             break
@@ -152,6 +151,7 @@ class TetrisGame:
             
     def start_game(self):
         if self.gameover:
+            self.clear_draw_pieces()
             self.setup()
             self.gameover = False
 
@@ -161,10 +161,16 @@ class TetrisGame:
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 wool " + str(col))
+    def draw_piece2(self,piece):
+        for cy, row in enumerate(piece):
+            for cx, col in enumerate(row):
+                if col != 0:
+                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " "
+                                            + str(80 - cy) + " 3 wool " + str(col))
 
     def erase_piece(self):
         for cy, row in enumerate(self.piece):
-            for cx, col in enumerate(row):
+            for cx, col in enumerate(row):            
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 air")
@@ -194,13 +200,13 @@ class TetrisGame:
                 self.piece = new_piece
             else: break
 
-    def act(self,action):
+    def act(self):
         time.sleep(.1)
         #--------Random play-------#
         self.rand_move()
         self.rand_rotate_piece()
         self.insta_drop()
-	return self.score
+	return self.score()
     
     def run(self):
         self.gameover = False
@@ -214,9 +220,9 @@ class TetrisGame:
             self.insta_drop()
 
         self.clear_draw_pieces()
-	return self.score
+	return self.score()
 
-    def score_board(self):
+    def score(self):
         current_r = 0
         height = 0
         complete_lines = 0
