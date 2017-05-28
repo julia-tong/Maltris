@@ -201,8 +201,8 @@ class TetrisGame:
         while not self.gameover:
             time.sleep(.1)
             #--------Random play-------#
-            #self.rand_move()
-            #self.rand_rotate_piece()
+            self.rand_move()
+            self.rand_rotate_piece()
             self.insta_drop()
 
         self.clear_draw_pieces()
