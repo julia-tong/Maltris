@@ -193,7 +193,15 @@ class TetrisGame:
             if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
                 self.piece = new_piece
             else: break
-            
+
+    def act(self,action):
+        time.sleep(.1)
+        #--------Random play-------#
+        self.rand_move()
+        self.rand_rotate_piece()
+        self.insta_drop()
+	return self.score
+    
     def run(self):
         self.gameover = False
         # Loop until Gameover
