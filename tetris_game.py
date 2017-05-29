@@ -122,7 +122,7 @@ class TetrisGame:
                         if 0 not in row:
                             self.board = remove_row(self.board, i)
                             self.draw_piece2(self.board[:-1])
-                            line_clears += 1
+                            self.line_clears += 1
                             check_board = True
                             break
                 return True
@@ -158,7 +158,7 @@ class TetrisGame:
                         if 0 not in row:
                             self.board = remove_row(self.board, i)
                             self.draw_piece2(self.board)
-                            line_clears += 1
+                            self.line_clears += 1
                             check_board = True
                             break
                 return True
