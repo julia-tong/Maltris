@@ -34,3 +34,11 @@ To calculate the reward for each game, we currently have a reward map, where inc
 We first generate a random seed for a predictable game so that each play will be similar through each iteration during training.  Then using a few runs, we evaluate against each in randomized moves, Q-learning, and a Neural Network, and a human player to determine how long in minutes or hours the player will survive.  We may also account for the number of lines cleared.
 
 ## Remaining Goals and Challenges:
+
+Some goals for the next few weeks include: simulating our game on a full tetris board (10x20 blocks) with full sized pieces, trying to prolong the length of one game (clearing as many lines as possible), and also fix our heuristic function. 
+
+Currently, our game is simulated on a smaller scale to cut down on computations and to see if our AI is making any progress. We want to be able to run our AI on a full scale tetris game eventually. 
+
+Our AI currently isn't clearing as many lines as we would like to right now, so we will need a better strategy for placing incoming pieces. This heavily relies on our heuristic function, which we will need to fix.
+
+The implementation of calculating the height of the board right now is simply taking the height of the tallest column of the board. However, later on we want to change it to calculate the aggregate height of the entire board-- meaning it will sum the height of each column on the board. This will encourage our AI to drop more pieces before reaching the top of the board. The implementation of calculating the number of holes will also need some tweaking because it's not accurate in detecting holes/empty spaces right now. 
