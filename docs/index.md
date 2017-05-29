@@ -14,4 +14,12 @@ title:  Home
 ##### Other Links and References:
 
 [https://github.com/Microsoft/malmo](https://github.com/Microsoft/malmo)
+
 [https://gist.github.com/silvasur/565419](https://gist.github.com/silvasur/565419)
+
+[http://cs231n.stanford.edu/reports/2016/pdfs/121_Report.pdf](http://cs231n.stanford.edu/reports/2016/pdfs/121_Report.pdf)
+
+[http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html](http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html)
+
+[https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf](https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf)
+
