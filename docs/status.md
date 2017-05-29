@@ -25,7 +25,7 @@ The main algorithm we're using for reinforcement learning is Q-Learning. Our imp
 
 The state of our game is simply the arrangement of the pieces on our board. The number of states that we have is the different combinations of the incoming piece on the tetris board. Some pieces such as the O and I pieces will have less states because some rotations will result in the same arrangement of pieces on the board. To avoid extra computations, we only keep track of different/distinct states of the board.
 
-The actions of our game involves 2 facts: the rotation/orientation and the placement of the incoming piece. There are 4 rotations for each piece, but some pieces like the O and I pieces may not look different for each rotation. The number of actions that we have is the different number of orientations times the number of placements across the board for the incoming piece.
+The actions of our game involves 2 factors: the rotation/orientation and the placement of the incoming piece. There are 4 rotations for each piece, but some pieces like the O and I pieces may not look different for each rotation. The number of actions that we have is the different number of orientations multiplied by the number of placements across the board for the incoming piece.
 
 To calculate the reward for each game, we currently have a reward map, where increasing height of the pieces has a reward of -8, holes have a reward of -5, and clearing/completing a line has a reward of 20. We take the linear combination of these 3 to determine the reward.
 
