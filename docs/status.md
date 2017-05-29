@@ -48,7 +48,9 @@ Two factors we take into consideration for evaluation are: the number of lines t
 
 In this case, we can see that one game was able to clear 3 lines and another was able to clear 2. Our AI is improving, but at a pretty slow rate at the moment. 
 
-In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner.
+In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner. When we run the game with a random generator, the game seems to end almost instantaneously.
+
+Even though the length of each game is strongly correlated to the number of lines that are cleared, which directly determines how well our AI is doing, it's still a good indicator for the success of our AI because our goal is to ultimately keep our AI in "survival mode." The game should keep going for as long as possible.
 
 ## Remaining Goals and Challenges:
 
