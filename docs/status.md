@@ -33,6 +33,23 @@ To calculate the reward for each game, we currently have a reward map, where inc
 
 We first generate a random seed for a predictable game so that each play will be similar through each iteration during training.  Then using a few runs, we evaluate against each in randomized moves, Q-learning, and a Neural Network, and a human player to determine how long in minutes or hours the player will survive.  We may also account for the number of lines cleared.
 
+Two factors we take into consideration for evaluation are: the number of lines that are cleared and the length of one game. In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward. We printed out the number of lines that were cleared for each game. 
+
+    ('Made it to level:', 28)
+    ('Total Line Clears:', 3)
+    ('Made it to level:', 16)
+    ('Total Line Clears:', 0)
+    ('Made it to level:', 17)
+    ('Total Line Clears:', 0)
+    ('Made it to level:', 13)
+    ('Total Line Clears:', 0)
+    ('Made it to level:', 17)
+    ('Total Line Clears:', 2)
+
+In this case, we can see that one game was able to clear 3 lines and another was able to clear 2. Our AI is improving, but at a pretty slow rate at the moment. 
+
+In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner.
+
 ## Remaining Goals and Challenges:
 
 Some goals for the next few weeks include: simulating our game on a full tetris board (10x20 blocks) with full sized pieces, trying to prolong the length of one game (clearing as many lines as possible), and also fix our heuristic function. 
