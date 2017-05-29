@@ -5,13 +5,13 @@ import time
 from random import randrange as rand
 import copy
 
-rewards_map = {'inc_height': -8, 'clear_line': 20, 'holes': -5, 'top_height': -100}
+rewards_map = {'inc_height': -8, 'clear_line': 30, 'holes': -5, 'top_height': -100}
 
 colors = ["Lime_Wool", "Orange_Wool", "Blue_Wool", "Pink_Wool", "Red_Wool",
           "Magenta_Wool", "Yellow_Wool"]
 
 cols = 5
-rows = 22
+rows = 12
 
 # Define the shapes of the single parts
 tetris_shapes = [
@@ -52,7 +52,6 @@ def new_board():
     return board
 
 def remove_row(board, row):
-    print("Line Cleared")
     del board[row]
     return [[0 for i in xrange(cols)]] + board
 	
