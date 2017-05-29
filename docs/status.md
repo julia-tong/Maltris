@@ -11,9 +11,17 @@ Since we've created a tetris board, we will take in the current state of the boa
 
 ## Approach:
 
-The main algorithm we're using for reinforcement learning is SARSA.
+The main algorithm we're using for reinforcement learning is Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
 
-!!! ADD MORE INFO ABOUT OUR SARSA ALGORITHM HERE !!!
+    def update_q_table(self, tau, S, A, R, T):
+        curr_s, curr_a, curr_r = magic(S.popleft()), A.popleft(), R.popleft()
+        next_s = magic(curr_a)
+        G = sum([self.gamma ** i * R[i] for i in range(len(S))])
+        if tau + self.n < T:
+            G += self.gamma ** self.n * self.q_table[magic(S[-1])][magic(A[-1])]
+        
+        old_q = self.q_table[curr_s][next_s]
+        self.q_table[curr_s][next_s] = old_q + self.alpha* (G - old_q)
 
 The state of our game is simply the arrangement of the pieces on our board. The number of states that we have is the different combinations of the incoming piece on the tetris board. Some pieces such as the O and I pieces will have less states because some rotations will result in the same arrangement of pieces on the board. To avoid extra computations, we only keep track of different/distinct states of the board.
 
