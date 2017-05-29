@@ -15,9 +15,11 @@ rows = 12
 
 # Define the shapes of the single parts
 tetris_shapes = [
-	[[1]],
+	[[0, 1],
+     [0, 0]],
 	
-	[[2, 2]],
+	[[2, 2],
+     [0, 0]],
 	
 	[[0, 3],
 	 [3, 0]],
@@ -85,7 +87,7 @@ class TetrisGame:
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.piece_x = int(cols/2 - len(self.piece[0])/2)
         self.piece_y = 1
-        self.draw_piece()
+        self.draw_piece2(self.piece, self.piece_x)
         if check_collision(self.board, self.piece, (self.piece_x, self.piece_y)):
             self.gameover = True
 
@@ -182,14 +184,14 @@ class TetrisGame:
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + self.piece_x + cx) + " "
                                             + str(80 - self.piece_y - cy) + " 3 wool " + str(col))
-    def draw_piece2(self,piece):
+    def draw_piece2(self,piece,x=0):
         for cy, row in enumerate(piece):
             for cx, col in enumerate(row):
                 if col != 0:
-                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " "
+                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx + x) + " "
                                             + str(80 - cy) + " 3 wool " + str(col))
                 elif col == 0:
-                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " "
+                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx + x) + " "
                                             + str(80 - cy) + " 3 air")
 
     def erase_piece(self):

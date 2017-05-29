@@ -27,7 +27,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
             <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"/>
                 <DrawingDecorator>
-                    <DrawLine x1="5" y1="56" z1="22" x2="5" y2="66" z2="22" type="obsidian"/>
+                    <DrawLine x1="2" y1="56" z1="22" x2="2" y2="72" z2="22" type="obsidian"/>
                 </DrawingDecorator>
                 <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
@@ -35,7 +35,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <AgentSection mode="Creative">
             <Name>MalmoTutorialBot</Name>
             <AgentStart>
-                <Placement x="5" y="67" z="22.8" yaw="180"/>
+                <Placement x="2.5" y="73" z="22.8" yaw="180"/>
             </AgentStart>
             <AgentHandlers>
                 <ObservationFromFullStats/>
