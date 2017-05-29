@@ -5,35 +5,28 @@ import time
 from random import randrange as rand
 import copy
 
-rewards_map = {'inc_height': -8, 'clear_line': 20, 'holes': -5}
+rewards_map = {'inc_height': -8, 'clear_line': 20, 'holes': -5, 'top_height': -100}
 
 colors = ["Lime_Wool", "Orange_Wool", "Blue_Wool", "Pink_Wool", "Red_Wool",
           "Magenta_Wool", "Yellow_Wool"]
 
-cols = 10
+cols = 5
 rows = 22
 
 # Define the shapes of the single parts
 tetris_shapes = [
-	[[1, 1, 1],
-	 [0, 1, 0]],
+	[[1]],
 	
-	[[0, 2, 2],
-	 [2, 2, 0]],
+	[[2, 2]],
 	
-	[[3, 3, 0],
-	 [0, 3, 3]],
+	[[0, 3],
+	 [3, 0]],
 	
-	[[4, 0, 0],
-	 [4, 4, 4]],
+	[[0, 4],
+	 [4, 4]],
 	
-	[[0, 0, 5],
-	 [5, 5, 5]],
-	
-	[[6, 6, 6, 6]],
-	
-	[[7, 7],
-	 [7, 7]]
+	[[5, 5],
+	 [5, 5]]
 ]
 
 def rotate_clockwise(shape):
@@ -59,7 +52,7 @@ def new_board():
     return board
 
 def remove_row(board, row):
-    print "row removed"
+    print("Line Cleared")
     del board[row]
     return [[0 for i in xrange(cols)]] + board
 	
@@ -73,8 +66,6 @@ def join_matrixes(mat1, mat2, mat2_off):
 class TetrisGame:
     def __init__(self, agent_host):
         self.agent_host = agent_host
-        self.width = cols+6
-        self.height = rows
         self.rlim = cols
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.setup()
@@ -83,16 +74,18 @@ class TetrisGame:
 
     def setup(self):
         self.board = new_board()
-        self.new_piece()
+        self.line_clears = 0
         self.level = 1
+        self.new_piece()
         self.lines = 0
         self.gameover = False
             
     def new_piece(self):
+        self.level += 1
         self.piece = self.next_piece[:]
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.piece_x = int(cols/2 - len(self.piece[0])/2)
-        self.piece_y = 0
+        self.piece_y = 1
         self.draw_piece()
         if check_collision(self.board, self.piece, (self.piece_x, self.piece_y)):
             self.gameover = True
@@ -128,8 +121,8 @@ class TetrisGame:
                     for i, row in enumerate(self.board[:-1]):
                         if 0 not in row:
                             self.board = remove_row(self.board, i)
-                            self.draw_piece2(self.board)
-                            clear_rows += 1
+                            self.draw_piece2(self.board[:-1])
+                            line_clears += 1
                             check_board = True
                             break
                 return True
@@ -144,6 +137,35 @@ class TetrisGame:
             while(not self.drop(True)):
                 pass
 
+    def drop_no_draw(self, manual):
+        if not self.gameover:
+            if check_collision(self.board,
+                               self.piece,
+                               (self.piece_x, self.piece_y+1)):
+                self.piece_y += 1
+                self.draw_piece()
+                self.board = join_matrixes(
+                    self.board,
+                    self.piece,
+                    (self.piece_x, self.piece_y))
+                self.new_piece()
+
+                check_board = True
+                clear_rows = 0
+                while check_board:
+                    check_board = False
+                    for i, row in enumerate(self.board[:-1]):
+                        if 0 not in row:
+                            self.board = remove_row(self.board, i)
+                            self.draw_piece2(self.board)
+                            line_clears += 1
+                            check_board = True
+                            break
+                return True
+            else:
+                self.piece_y += 1
+        return False
+    
     def rotate_piece(self):
         new_piece = rotate_clockwise(self.piece)
         if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
@@ -167,6 +189,9 @@ class TetrisGame:
                 if col != 0:
                     self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " "
                                             + str(80 - cy) + " 3 wool " + str(col))
+                elif col == 0:
+                    self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " "
+                                            + str(80 - cy) + " 3 air")
 
     def erase_piece(self):
         for cy, row in enumerate(self.piece):
@@ -179,71 +204,3 @@ class TetrisGame:
             for cx, col in enumerate(row):
                 if (self.board[cy][cx] != 0):
                     self.agent_host.sendCommand("chat /setblock " + str(0 + cx) + " " + str(80 - cy) + " 3 air")
-
-    def rand_move(self):
-        if not self.gameover:
-            new_x = rand(10)
-            if not check_collision(self.board,
-                                  self.piece,
-                                  (new_x, self.piece_y)):
-                self.piece_x = new_x
-                return True
-            else:
-                return False
-
-    def rand_rotate_piece(self):
-        val = rand(4)
-        new_piece = self.piece
-        for i in xrange(val):
-            new_piece = rotate_clockwise(new_piece)
-            if not check_collision(self.board, new_piece, (self.piece_x, self.piece_y)):
-                self.piece = new_piece
-            else: break
-
-    def act(self):
-        time.sleep(.1)
-        #--------Random play-------#
-        self.rand_move()
-        self.rand_rotate_piece()
-        self.insta_drop()
-	return self.score()
-    
-    def run(self):
-        self.gameover = False
-        # Loop until Gameover
-        print("game running")
-        while not self.gameover:
-            time.sleep(.1)
-            #--------Random play-------#
-            self.rand_move()
-            self.rand_rotate_piece()
-            self.insta_drop()
-
-        self.clear_draw_pieces()
-	return self.score()
-
-    def score(self):
-        current_r = 0
-        height = 0
-        complete_lines = 0
-        holes = 0
-        
-        for row in self.board:
-            if (all(i == 0 for i in row) == False):
-                height += 1
-        current_r += height * rewards_map['inc_height']
-                
-        for row in self.board:
-            if (all(i != 0 for i in row)):
-                complete_lines += 1
-        current_r += complete_lines * rewards_map['clear_line']
-        
-        pieces = copy.deepcopy(self.board[rows - height:])
-        for i, row in enumerate(pieces):
-            if i != 0:
-                for index, item in enumerate(row):
-                    if item == 0 and pieces[i-1][index] != 0:
-                        holes += 1
-        current_r += holes * rewards_map['holes']
-        
-        return current_r
