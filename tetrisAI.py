@@ -10,7 +10,7 @@ import copy
 
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
 
-rewards_map = {'inc_height': -20, 'clear_line': 50, 'holes': -20, 'top_height':-10}
+rewards_map = {'inc_height': -20, 'clear_line': 50, 'holes': -20, 'top_height':-100}
 
 missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -29,7 +29,6 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <DrawingDecorator>
                     <DrawLine x1="5" y1="56" z1="22" x2="5" y2="66" z2="22" type="obsidian"/>
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="600000"/>
                 <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
         </ServerSection>
@@ -166,18 +165,31 @@ class TetrisAI:
         current_r = 0
         complete_lines = 0
         heighest = 0
-        
-        for row in board[-2::-1]:
+        holes = 0
+
+        new_board = board[-2::-1]
+        for row in new_board:
             if 0 not in row:
                 complete_lines += 1
         current_r += complete_lines * rewards_map['clear_line']
 
-        for i, row in enumerate(board[-2::-1]):
+        for i, row in enumerate(new_board):
             if all(j == 0 for j in row):
                 heighest = i
-                
-        current_r += heighest * rewards_map['top_height']
 
+        current_r += (heighest-2) * rewards_map['top_height']
+
+        '''for i, row in enumerate(new_board):
+            if 0 in row:
+                indexes = [i for i, j in enumerate(row) if j == 0]
+                for index in indexes:
+                    if new_board[i+1][index] != 0:
+                        holes += 1
+            if all(j == 0 for j in row):
+                break
+                
+        current_r += holes * rewards_map['holes']'''
+        
         return current_r
     
     def rotate_piece(self, piece, piece_x, piece_y, board):
@@ -292,7 +304,7 @@ if __name__ == "__main__":
 
     #Build Tetris Board
     left_x, right_x = -1, -1+cols+1
-    bottom_y, top_y = 58, 58+rows+1
+    bottom_y, top_y = 68, 68+rows+1
     z_pos = 3
     mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
     mission.drawLine( right_x, bottom_y, z_pos, right_x, top_y, z_pos, "obsidian" )
