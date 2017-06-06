@@ -7,6 +7,8 @@ from random import randrange as rand
 from collections import deque
 from tetris_game import *
 import copy
+import numpy
+from numpy import zeros
 
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
 
@@ -178,6 +180,14 @@ class TetrisAI:
                 heighest = i
 
         current_r += (heighest-2) * rewards_map['top_height']
+        
+        heights = zeros((len(new_board[0]),), dtype = numpy.int)
+        for i, row in enumerate(new_board):
+            for j, col in enumerate(row):
+                if col != 0:
+                    heights[j] = i + 1
+        aggregate_height = sum(heights)
+        current_r += aggregate_height * rewards_map['inc_height']
 
         '''for i, row in enumerate(new_board):
             if 0 in row:
