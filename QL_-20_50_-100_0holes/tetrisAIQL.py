@@ -49,7 +49,10 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     
 def magic(X):
     return ''.join(str(i) for i in X)
-    
+
+QLfilename = 'maltrisQLTable.save'
+QLgraphfilename = 'maltrisQLGraphData.save'
+
 class TetrisAI:
     def __init__(self, game, alpha=0.3, gamma=1, n=1):
         self.epsilon = 0.3
@@ -61,22 +64,22 @@ class TetrisAI:
         self.game = game
 
     def saveQtable(self):
-        f = open('maltrisQLTable.save', 'wb')
+        f = open(QLfilename, 'wb')
         pickle.dump(self.gamesplayed, f, protocol=pickle.HIGHEST_PROTOCOL)
         pickle.dump(self.q_table, f, protocol=pickle.HIGHEST_PROTOCOL)
         f.close()
-        f2 = open('maltrisQLGraphData.save', 'wb')
+        f2 = open(QLgraphfilename, 'wb')
         pickle.dump(self.gamesplayed, f2, protocol=pickle.HIGHEST_PROTOCOL)
         pickle.dump(self.listGameLvl, f2, protocol=pickle.HIGHEST_PROTOCOL)
         pickle.dump(self.listClears, f2, protocol=pickle.HIGHEST_PROTOCOL)
         f2.close()
 
     def loadQtable(self):
-        f = open('maltrisQLTable.save', 'rb')
+        f = open(QLfilename, 'rb')
         self.gamesplayed = pickle.load(f)
         self.q_table = pickle.load(f)
         f.close()
-        f2 = open('maltrisQLGraphData.save', 'rb')
+        f2 = open(QLgraphfilename, 'rb')
         self.gamesplayed = pickle.load(f2)
         self.listGameLvl = pickle.load(f2)
         self.listClears = pickle.load(f2)
@@ -87,6 +90,7 @@ class TetrisAI:
         curr_reward = 0
         done_update = False
         game_overs = 0
+        self.loadQtable() #uncomment to load Q-table values
         while not done_update:
             init_state = self.get_curr_state()
             possible_actions = self.get_possible_actions()
@@ -113,7 +117,8 @@ class TetrisAI:
 
                         if game_overs == 5:
                             print("Best attempt, gamesplayed: ", self.gamesplayed,
-                                  " avglvls: ", numpy.mean(self.listGameLvl), " avgclears: ", numpy.mean(self.listClears))
+                                  " avglvls: ", numpy.mean(self.listGameLvl),
+                                  " avgclears: ", numpy.mean(self.listClears))
                             self.saveQtable()
                             game_overs = 0
                             self.epsilon = 0
@@ -383,8 +388,6 @@ if __name__ == "__main__":
     n = 1
     my_game = TetrisGame(agent_host)
     my_AI = TetrisAI(my_game)
-    #uncomment to load q-tables
-    my_AI.loadQtable()
     print("n=", n)
     for n in range(numIter):
         my_AI.run(agent_host)

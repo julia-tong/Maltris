@@ -48,19 +48,48 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
     
 def magic(X):
     return ''.join(str(i) for i in X)
+
+QLfilename = 'maltrisQLTable2.save'
+QLgraphfilename = 'maltrisQLGraphData2.save'
     
 class TetrisAI:
     def __init__(self, game, alpha=0.3, gamma=1, n=1):
         self.epsilon = 0.3
         self.q_table = {}
         self.n, self.alpha, self.gamma = n, alpha, gamma
+        self.gamesplayed = 0
+        self.listGameLvl = []
+        self.listClears = []
         self.game = game
+
+    def saveQtable(self):
+        f = open(QLfilename, 'wb')
+        pickle.dump(self.gamesplayed, f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(self.q_table, f, protocol=pickle.HIGHEST_PROTOCOL)
+        f.close()
+        f2 = open(QLgraphfilename, 'wb')
+        pickle.dump(self.gamesplayed, f2, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(self.listGameLvl, f2, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(self.listClears, f2, protocol=pickle.HIGHEST_PROTOCOL)
+        f2.close()
+
+    def loadQtable(self):
+        f = open(QLfilename, 'rb')
+        self.gamesplayed = pickle.load(f)
+        self.q_table = pickle.load(f)
+        f.close()
+        f2 = open(QLgraphfilename, 'rb')
+        self.gamesplayed = pickle.load(f2)
+        self.listGameLvl = pickle.load(f2)
+        self.listClears = pickle.load(f2)
+        f2.close()
 
     def run(self, agent_host):
         states, actions, rewards = deque(), deque(), deque()
         curr_reward = 0
         done_update = False
         game_overs = 0
+        # self.loadQtable() #uncomment to load Q-table values
         while not done_update:
             init_state = self.get_curr_state()
             possible_actions = self.get_possible_actions()
@@ -78,12 +107,18 @@ class TetrisAI:
 
                     if self.game.gameover == True:
                         game_overs += 1
+                        self.gamesplayed += 1
+                        self.listGameLvl.append(self.game.level)
+                        self.listClears.append(self.game.line_clears)
                         print("Made it to level:",self.game.level)
                         print("Total Line Clears:",self.game.line_clears)
                         self.game.start_game()
 
                         if game_overs == 5:
-                            print("Best attempt")
+                            print("Best attempt, gamesplayed: ", self.gamesplayed,
+                                  " avglvls: ", numpy.mean(self.listGameLvl),
+                                  " avgclears: ", numpy.mean(self.listClears))
+                            #self.saveQtable() #uncomment to save Q-table values
                             game_overs = 0
                             self.epsilon = 0
                         else:
