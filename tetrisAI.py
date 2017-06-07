@@ -6,6 +6,7 @@ import random
 from random import randrange as rand
 from collections import deque
 from tetris_game import *
+import pickle
 import copy
 import numpy
 from numpy import zeros
