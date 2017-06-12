@@ -41,7 +41,7 @@ Our current board is only has a width of 5, as opposed to the standard 10. We al
 
 We first generate a random seed for a predictable game so that each play will be similar through each iteration during training.  Then using a few runs, we evaluate against each in randomized moves, Q-learning, and a Neural Network, and a human player to determine how long in minutes or hours the player will survive.  We may also account for the number of lines cleared.
 
-Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
+Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level of one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
 
 **Q-Learning (9350 games played)**
 
@@ -87,7 +87,7 @@ We can observe here that just after 100 games are played using Q-Learning, our a
     ('Total Line Clears:', 1)
     ('Best attempt, gamesplayed: ', 5090, ' avglvls: ', 14.703732809430255, ' avgclears: ', 0.39233791748526525)
 
-**Random (5090 games played)**
+**Random (5190 games played)**
 
     ('Made it to level:', 19)
     ('Total Line Clears:', 2)
@@ -101,7 +101,7 @@ We can observe here that just after 100 games are played using Q-Learning, our a
     ('Total Line Clears:', 0)
     ('Best attempt, gamesplayed: ', 5190, ' avglvls: ', 14.702504816955685, ' avgclears: ', 0.39113680154142583)
 
-When running 100 games with pieces being randomly placed, our average levels have actually decreased by 0.0012 blocks and our average number of lines cleared have increased by 0.0012 lines. This serves as a baseline for us since there is clearly no improvement when have pieces randomly placed.
+When running 100 games with pieces being randomly placed, our average levels have actually decreased by 0.0012 blocks and our average number of lines cleared have increased by 0.0012 lines. This serves as a baseline for us since there is clearly no improvement when have pieces randomly placed, whereas our AI with Q-Learning actually shows improvement over time.
 
 In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner. When we run the game with a random generator, the game seems to end almost instantaneously.
 
