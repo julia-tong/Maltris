@@ -44,6 +44,7 @@ We first generate a random seed for a predictable game so that each play will be
 Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
 
 **Q-Learning (9350 games played)**
+
     ('Made it to level:', 15)
     ('Total Line Clears:', 0)
     ('Made it to level:', 19)
@@ -57,6 +58,7 @@ Two factors we take into consideration for evaluation are: the number of lines t
     ('Best attempt, gamesplayed: ', 9350, ' avglvls: ', 15.845347593582888, ' avgclears: ', 0.75133689839572193)
     
 **Q-Learning (9450 games played)**
+
     ('Made it to level:', 19)
     ('Total Line Clears:', 1)
     ('Made it to level:', 13)
@@ -72,6 +74,7 @@ Two factors we take into consideration for evaluation are: the number of lines t
 We can observe here that just after 100 games are played using Q-Learning, our average levels have increased by 0.01179 blocks and our average number of lines cleared have increased by 0.004 lines. This indicates that our AI is slowly improving over time.
 
 **Random (5090 games played)**
+
     ('Made it to level:', 13)
     ('Total Line Clears:', 0)
     ('Made it to level:', 11)
@@ -85,6 +88,7 @@ We can observe here that just after 100 games are played using Q-Learning, our a
     ('Best attempt, gamesplayed: ', 5090, ' avglvls: ', 14.703732809430255, ' avgclears: ', 0.39233791748526525)
 
 **Random (5090 games played)**
+
     ('Made it to level:', 19)
     ('Total Line Clears:', 2)
     ('Made it to level:', 18)
@@ -104,3 +108,13 @@ In the first few games that are run, the length of the one game is shorter than 
 Even though the length of each game is strongly correlated to the number of lines that are cleared, which directly determines how well our AI is doing, it's still a good indicator for the success of our AI because our goal is to ultimately keep our AI in "survival mode." The game should keep going for as long as possible.
 
 ## References
+
+[https://github.com/Microsoft/malmo](https://github.com/Microsoft/malmo)
+
+[https://gist.github.com/silvasur/565419](https://gist.github.com/silvasur/565419)
+
+[http://cs231n.stanford.edu/reports/2016/pdfs/121_Report.pdf](http://cs231n.stanford.edu/reports/2016/pdfs/121_Report.pdf)
+
+[http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html](http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html)
+
+[https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf](https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf)
