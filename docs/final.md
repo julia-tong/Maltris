@@ -15,7 +15,9 @@ Since we've created a tetris board, we will take in the current state of the boa
 
 ## Approaches
 
-The main algorithm we're using for reinforcement learning is Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
+Our baseline that we're comparing our AI to is simply generating a random orientation and placement for the incoming piece. Some advantages of this approach is that it takes less time and calculations to generate the next action. However, there are many disadvantages because it results in poor decisions (it doesn't really know how to make a "good" decision in this case) and it doesn't improve over time. Ultimately, it is not sufficient to complete our goal.
+
+Our approach for our AI is to use Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
 
     def update_q_table(self, tau, S, A, R, T):
         curr_s, curr_a, curr_r = magic(S.popleft()), A.popleft(), R.popleft()
@@ -35,13 +37,13 @@ The actions of our game involves 2 factors: the rotation/orientation and the pla
 
 To calculate the reward for each game, we currently have a reward map, where increasing the height of the pieces has a reward of -20, holes have a reward of -20, and clearing/completing a line has a reward of 50. We take the linear combination of these 3 to determine the reward. These numbers were chosen somewhat arbitrarily, but they have changed over the course of the project. We came to the conclusion that this is a pretty good proportion of negative rewards vs. positive rewards. Before, our negative rewards were given too much weight, so having a positive reward wouldn't really make a huge impact on the score.
 
-Our current board is only has a width of 5, as opposed to the standard 10. We also have simplified the pieces coming in, as can be seen in the video. 
+Comparing our AI to our baseline, our AI certainly has more calculations (to determine the score of the board and decide which action to take) and requires more data (such as the q-table). However, the results from using Q-Learning are much better than our baseline because we can observe our AI clearing more lines from the board over time and it actually shows improvement, which is ultimately what we're trying to achieve.
 
 ## Evaluation
 
-We first generate a random seed for a predictable game so that each play will be similar through each iteration during training.  Then using a few runs, we evaluate against each in randomized moves, Q-learning, and a Neural Network, and a human player to determine how long in minutes or hours the player will survive.  We may also account for the number of lines cleared.
-
 Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level of one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
+
+We compared our AI to our baseline that used randomzied moves. These are the results we observed:
 
 **Q-Learning (9350 games played)**
 
@@ -101,9 +103,9 @@ We can observe here that just after 100 games are played using Q-Learning, our a
     ('Total Line Clears:', 0)
     ('Best attempt, gamesplayed: ', 5190, ' avglvls: ', 14.702504816955685, ' avgclears: ', 0.39113680154142583)
 
-When running 100 games with pieces being randomly placed, our average levels have actually decreased by 0.0012 blocks and our average number of lines cleared have increased by 0.0012 lines. This serves as a baseline for us since there is clearly no improvement when have pieces randomly placed, whereas our AI with Q-Learning actually shows improvement over time.
+When running 100 games with randomized moves, our average levels have actually decreased by 0.0012 blocks and our average number of lines cleared have increased by 0.0012 lines. This serves as a baseline for us since there is clearly no improvement when have pieces randomly placed, whereas our AI with Q-Learning actually shows improvement in average levels and average number of lines cleared over time.
 
-In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner. When we run the game with a random generator, the game seems to end almost instantaneously.
+In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner. When we run the game with a randomized moves, the game seems to end almost instantaneously.
 
 Even though the length of each game is strongly correlated to the number of lines that are cleared, which directly determines how well our AI is doing, it's still a good indicator for the success of our AI because our goal is to ultimately keep our AI in "survival mode." The game should keep going for as long as possible.
 
