@@ -101,7 +101,7 @@ class TetrisAI:
 
             T = sys.maxint
             for t in xrange(sys.maxint):
-                time.sleep(0.1)
+                #time.sleep(0.1)
                 if t < T:
                     curr_reward = self.act(next_action)
                     rewards.append(curr_reward)
@@ -119,7 +119,7 @@ class TetrisAI:
                             print("Best attempt, gamesplayed: ", self.gamesplayed,
                                   " avglvls: ", numpy.mean(self.listGameLvl),
                                   " avgclears: ", numpy.mean(self.listClears))
-                            self.saveQtable() #uncomment to save Q-table values
+                            # self.saveQtable() #uncomment to save Q-table values
                             game_overs = 0
                             self.epsilon = 0
                         else:
@@ -141,6 +141,11 @@ class TetrisAI:
                         self.update_q_table(tau, states, actions, rewards, T)
                     done_update = True
                     break
+
+                if t%5000 == 0:
+                    self.saveQtable()  # uncomment to save Q-table values
+                    print("------------------Saving Qtable---------")
+                    time.sleep(0.1)
                 
     def act(self, action):
         # Random Actions
@@ -149,7 +154,7 @@ class TetrisAI:
         for i in range(temp[1]):
             self.game.rotate_piece()
         m_score = self.score(self.pred_insta_drop2(temp))
-        self.game.insta_drop()
+        self.game.insta_drop_no_draw()
         return m_score
 
 
