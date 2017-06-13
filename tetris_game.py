@@ -70,7 +70,7 @@ class TetrisGame:
         self.rlim = cols
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.setup()
-        self.clear_draw_pieces()
+        #self.clear_draw_pieces() #DRAW
         self.start_game()
 
     def setup(self):
@@ -79,6 +79,7 @@ class TetrisGame:
         self.level = 1
         self.new_piece()
         self.lines = 0
+        self.score = 0
         self.gameover = False
             
     def new_piece(self):
@@ -87,9 +88,11 @@ class TetrisGame:
         self.next_piece = tetris_shapes[rand(len(tetris_shapes))]
         self.piece_x = int(cols/2 - len(self.piece[0])/2)
         self.piece_y = 1
-        self.draw_piece2(self.piece, self.piece_x)
+
+        #self.draw_piece2(self.piece, self.piece_x) #DRAW
         if check_collision(self.board, self.piece, (self.piece_x, self.piece_y)):
             self.gameover = True
+
 
     def move(self, delta_x):
         if not self.gameover:
@@ -144,7 +147,6 @@ class TetrisGame:
                                self.piece,
                                (self.piece_x, self.piece_y+1)):
                 self.piece_y += 1
-                self.draw_piece()
                 self.board = join_matrixes(
                     self.board,
                     self.piece,
@@ -158,7 +160,6 @@ class TetrisGame:
                     for i, row in enumerate(self.board[:-1]):
                         if 0 not in row:
                             self.board = remove_row(self.board, i)
-                            self.draw_piece2(self.board)
                             self.line_clears += 1
                             check_board = True
                             break
@@ -166,6 +167,11 @@ class TetrisGame:
             else:
                 self.piece_y += 1
         return False
+
+    def insta_drop_no_draw(self):
+        if not self.gameover:
+            while(not self.drop_no_draw(True)):
+                pass
     
     def rotate_piece(self):
         new_piece = rotate_clockwise(self.piece)
@@ -174,7 +180,7 @@ class TetrisGame:
             
     def start_game(self):
         if self.gameover:
-            self.clear_draw_pieces()
+            #self.clear_draw_pieces()  #DRAW
             self.setup()
             self.gameover = False
 
