@@ -5,7 +5,7 @@ title:  Final Report
 
 ## Video
 
-<iframe width="640" height="360" src="https://www.youtube.com/watch?v=tsxv0VUbHe8&feature=youtu.be" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/tsxv0VUbHe8?rel=0" frameborder="0" allowfullscreen></iframe>
 
 ## Project Summary
 
