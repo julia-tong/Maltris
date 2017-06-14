@@ -39,8 +39,7 @@ To calculate the reward for each game, we currently have a reward map, where inc
 
 Comparing our AI to our baseline, our AI certainly has more calculations (to determine the score of the board and decide which action to take) and requires more data (such as the q-table). However, the results from using Q-Learning are much better than our baseline because we can observe our AI clearing more lines from the board over time and it actually shows improvement, which is ultimately what we're trying to achieve.
 
-
-We decided to take a step further by using Differential Evolution. The idea behind this is to have an initial population with the scoring heuristic. Then each individual of that initial population will have to try and achieve the maximum level. There will be a select number of these individuals that are the surviving population. Then the surviving population has a chance for mutation to happen, which produces improved results (such as reaching higher levels and clearing more lines). 
+For our second approach, we decided to take a step further by using Differential Evolution. The idea behind this is to have an initial population with the scoring heuristic. Then each individual of that initial population will have to try and achieve the maximum level. There will be a select number of these individuals that are the surviving population. Then the surviving population has a chance for mutation to happen, which produces improved results (such as reaching higher levels and clearing more lines). 
 
     def choose_action(self, possible_actions, weights):
         best_action = possible_actions[0]
