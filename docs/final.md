@@ -17,7 +17,7 @@ Since we've created a tetris board, we will take in the current state of the boa
 
 Our baseline that we're comparing our AI to is simply generating a random orientation and placement for the incoming piece. Some advantages of this approach is that it takes less time and calculations to generate the next action. However, there are many disadvantages because it results in poor decisions (it doesn't really know how to make a "good" decision in this case) and it doesn't improve over time. Ultimately, it is not sufficient to complete our goal.
 
-Our approach for our AI is to use Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
+Our first approach for our AI is to use Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
 
     def update_q_table(self, tau, S, A, R, T):
         curr_s, curr_a, curr_r = magic(S.popleft()), A.popleft(), R.popleft()
@@ -108,6 +108,21 @@ When running 100 games with randomized moves, our average levels have actually d
 In the first few games that are run, the length of the one game is shorter than the length of a game after running it for a few minutes. Because the AI slowly learns that clearing lines result in a higher reward, it may take a little longer for the game to finish if it is actually able to place and rotate each piece in a strategic manner. When we run the game with a randomized moves, the game seems to end almost instantaneously.
 
 Even though the length of each game is strongly correlated to the number of lines that are cleared, which directly determines how well our AI is doing, it's still a good indicator for the success of our AI because our goal is to ultimately keep our AI in "survival mode." The game should keep going for as long as possible.
+
+Below are some details on the data collected through training the Q-Learning algorithms.  The following models were tested by the state's input of the top one to three rows of the tetris board.
+
+![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/bestavgLvlPlot.png?raw=true "Maltris")
+The graph above shows the average game levels played over the training period of 3 Q-learning models and the baseline random evaluation. The result is that as state space increases, it takes longer to train and slower to reach an optimal solution. As a note, the second (shortest) line in each type of model is the optimized heuristic.
+
+![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/bestavgClearsPlot.png?raw=true "Maltris")
+Similarly the graph above shows the average cleared lines over the training period of 3 Q-learning models and the baseline random evaluation.  As a note, the second (shortest) line in each type of model is the optimized heuristic.
+
+![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/histlvls.png?raw=true "Maltris")
+This figure shows the frequency of the game counts in the three Q-learning algorithm models.
+
+![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/histclears.png?raw=true "Maltris")
+This figure shows the frequency of the lines cleared in the three Q-learning algorithm models.
+
 
 ## References
 
