@@ -112,15 +112,19 @@ Even though the length of each game is strongly correlated to the number of line
 Below are some details on the data collected through training the Q-Learning algorithms.  The following models were tested by the state's input of the top one to three rows of the tetris board.
 
 ![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/bestavgLvlPlot.png?raw=true "Maltris")
+
 The graph above shows the average game levels played over the training period of 3 Q-learning models and the baseline random evaluation. The result is that as state space increases, it takes longer to train and slower to reach an optimal solution. As a note, the second (shortest) line in each type of model is the optimized heuristic.
 
 ![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/bestavgClearsPlot.png?raw=true "Maltris")
+
 Similarly the graph above shows the average cleared lines over the training period of 3 Q-learning models and the baseline random evaluation.  As a note, the second (shortest) line in each type of model is the optimized heuristic.
 
 ![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/histlvls.png?raw=true "Maltris")
+
 This figure shows the frequency of the game counts in the three Q-learning algorithm models.
 
 ![](https://github.com/julia-tong/Maltris/blob/master/plotgraphdata/histclears.png?raw=true "Maltris")
+
 This figure shows the frequency of the lines cleared in the three Q-learning algorithm models.
 
 
