@@ -61,6 +61,22 @@ For our second approach, we decided to take a step further by using Differential
 
 The main difference with this approach is the way we choose the next action. When using Q-Learning, we use the q-table to decide what action to take. However, in this case, we check the score for all possible actions in that instance and select the action that has the highest score. This is more efficient than Q-Learning because it chooses the best action for the current board instead of choosing the best action that yields the best result in the long run. Q-Learning is certainly still improving, but just at a much slower rate.
 
+**Deep Q-Networks**
+
+Our last approach for training the AI was Deep Q-Networks.  The standard architecture of a neural network is to have input and output, but in between are hundreds or millions of nodes (or approximator functions) that calculate the probability of the output. In our case, the inputs (normalized board pixels) are then passed through an input layer, the hidden layers, which have the ReLU (Rectified Linear Units) activation functions, and the linear output layer to perform actions.  The network essentially approximates the rewards based on the current state to calculate the future reward for the next. Unique for Q-networks, the next step would be to save the instances of the game states by storing each pair of state, action, reward, and next state, and terminating state.  After that, the network can train on those saved experiences.
+
+![](https://github.com/julia-tong/Maltris/blob/master/images/neuralnet.png?raw=true "Maltris")
+
+There are obvious advantages and disadvantages to using this approach in our project. Starting with the disadvantages, neural network’s take a lot of time to train if the model isn’t a good fit.  The time it takes would have been unreasonable to finish.  In addition to unfit models, just hyper tuning the right parameters could take even longer, since there is no working model.  Lastly, the amount of processing that needs to be done can get expensive and slow on a regular CPU, so GPU’s are recommended to compute and train.
+
+If time were no issue, the advantages are outweighed. The DQN models have shown through studies (reference below) that simple input and time steps in a game can train a model better than existing machine learning or reinforcement techniques.  Simple modification to the input, by normalizing and reducing the pixels, can provide sufficient data to feed through the neural network.
+
+Using the Theano open-source library, the neural network models could easily be created through high-level wrapper calls. Then followed the pseudocode below in conjunction with the neural network:
+
+![](https://github.com/julia-tong/Maltris/blob/master/images/deepq.png?raw=true "Maltris")
+
+
+
 ## Evaluation
 
 Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level of one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
