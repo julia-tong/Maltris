@@ -30,7 +30,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
             <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"/>
                 <DrawingDecorator>
-                    <DrawLine x1="5" y1="56" z1="22" x2="5" y2="66" z2="22" type="obsidian"/>
+                    <DrawLine x1="2" y1="56" z1="22" x2="2" y2="72" z2="22" type="obsidian"/>
                 </DrawingDecorator>
                 <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
@@ -38,7 +38,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <AgentSection mode="Creative">
             <Name>MalmoTutorialBot</Name>
             <AgentStart>
-                <Placement x="5" y="67" z="22.8" yaw="180"/>
+                <Placement x="2.5" y="73" z="22.8" yaw="180"/>
             </AgentStart>
             <AgentHandlers>
                 <ObservationFromFullStats/>
@@ -50,6 +50,9 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 class TetrisAI:
     def __init__(self, game):
         self.game = game
+        self.gamesplayed = 0
+        self.listGameLvl = []
+        self.listClears = []
 
     def run(self, weights):
         scores = 0
@@ -62,7 +65,13 @@ class TetrisAI:
                 next_action = self.choose_action(possible_actions, weights)
                 self.act(next_action)
             scores = self.game.level
+            self.gamesplayed += 1
+            self.listGameLvl.append(self.game.level)
+            self.listClears.append(self.game.line_clears)
+            print("Made it to level:",self.game.level)
+            print("Total Line Clears:",self.game.line_clears)
             self.game.start_game()
+
         return -scores
             
     def act(self, action):
@@ -203,7 +212,7 @@ if __name__ == "__main__":
     left_x, right_x = -1, -1+cols+1
     bottom_y, top_y = 68, 68+rows+1
     z_pos = 3
-##    mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
+    mission.drawLine( left_x, bottom_y, z_pos, left_x, top_y, z_pos, "obsidian" )
     mission.drawLine( right_x, bottom_y, z_pos, right_x, top_y, z_pos, "obsidian" )
     mission.drawLine( left_x, bottom_y, z_pos, right_x, bottom_y, z_pos, "obsidian" )
     mission.drawLine( left_x, top_y, z_pos, right_x, top_y, z_pos, "obsidian" )
