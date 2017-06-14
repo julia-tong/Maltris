@@ -75,7 +75,9 @@ Using the Theano open-source library, the neural network models could easily be 
 
 ![](https://github.com/julia-tong/Maltris/blob/master/images/deepq.png?raw=true "Maltris")
 
+This approach and Q-learning are similar, except that the input had to be reformatted and the actions needed to converted to one-hot encoding for the output of the network.
 
+This model was experimental and did not produce reasonable results to include in our evaluation.
 
 ## Evaluation
 
