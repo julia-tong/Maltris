@@ -16,9 +16,11 @@ Since we've created a tetris board, we will take in the current state of the boa
 ## Approaches
 
 **Randomized moves**
+
 Our baseline that we're comparing our AI to is simply generating a random orientation and placement for the incoming piece. Some advantages of this approach is that it takes less time and calculations to generate the next action. However, there are many disadvantages because it results in poor decisions (it doesn't really know how to make a "good" decision in this case) and it doesn't improve over time. Ultimately, it is not sufficient to complete our goal.
 
 **Q-Learning**
+
 Our first approach for our AI is to use Q-Learning. Our implementation of updating the q-table is similar to the implementation used in assignment 2, where tau represents the state to update, S represents the states, A represents the actions for state S, R represents the rewards for actions A, and T represents the terminating state. Our agent selects an action that is optimal for each state. Then evaluates the board to retrieve the reward and observes the new state. This will result in the highest long-term reward. In our case, the more lines our AI is able to clear, the higher the reward will be.
 
     def update_q_table(self, tau, S, A, R, T):
@@ -42,6 +44,7 @@ To calculate the reward for each game, we currently have a reward map, where inc
 Comparing our AI to our baseline, our AI certainly has more calculations (to determine the score of the board and decide which action to take) and requires more data (such as the q-table). However, the results from using Q-Learning are much better than our baseline because we can observe our AI clearing more lines from the board over time and it actually shows improvement, which is ultimately what we're trying to achieve.
 
 **Differential Evolution**
+
 For our second approach, we decided to take a step further by using Differential Evolution. The idea behind this is to have an initial population with the scoring heuristic. Then each individual of that initial population will have to try and achieve the maximum level. There will be a select number of these individuals that are the surviving population. Then the surviving population has a chance for mutation to happen, which produces improved results (such as reaching higher levels and clearing more lines). 
 
     def choose_action(self, possible_actions, weights):
@@ -125,6 +128,7 @@ We can observe here that just after 100 games are played using Q-Learning, our a
 When running 100 games with randomized moves, our average levels have actually decreased by 0.0012 blocks and our average number of lines cleared have increased by 0.0012 lines. This serves as a baseline for us since there is clearly no improvement when have pieces randomly placed, whereas our AI with Q-Learning actually shows improvement in average levels and average number of lines cleared over time.
 
 **Differential Evolution**
+
 The results with our second approach (using differential evolution) shows a drastic difference compared to our AI using Q-Learning though. 
     
     Games Played: 500
