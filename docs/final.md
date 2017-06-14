@@ -187,3 +187,5 @@ This figure shows the frequency of the lines cleared in the three Q-learning alg
 [http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html](http://www.math.tau.ac.il/~mansour/rl-course/student_proj/livnat/tetris.html)
 
 [https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf](https://www.elen.ucl.ac.be/Proceedings/esann/esannpdf/es2008-118.pdf)
+
+[https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf)
