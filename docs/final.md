@@ -39,6 +39,23 @@ To calculate the reward for each game, we currently have a reward map, where inc
 
 Comparing our AI to our baseline, our AI certainly has more calculations (to determine the score of the board and decide which action to take) and requires more data (such as the q-table). However, the results from using Q-Learning are much better than our baseline because we can observe our AI clearing more lines from the board over time and it actually shows improvement, which is ultimately what we're trying to achieve.
 
+
+We decided to take a step further by using Differential Evolution. The idea behind this is to have an initial population with the scoring heuristic. Then each individual of that initial population will have to try and achieve the maximum level. There will be a select number of these individuals that are the surviving population. Then the surviving population has a chance for mutation to happen, which produces improved results (such as reaching higher levels and clearing more lines). 
+
+    def choose_action(self, possible_actions, weights):
+        best_action = possible_actions[0]
+        best_score = self.score(self.pred_insta_drop(best_action), weights)
+        
+        for action in possible_actions[1:]:
+            next_score = self.score(self.pred_insta_drop(action), weights)
+            if next_score >= best_score:
+                best_score = next_score
+                best_action = action
+                
+        return best_action
+
+The main difference with this approach is the way we choose the next action. When using Q-Learning, we use the q-table to decide what action to take. However, in this case, we check the score for all possible actions in that instance and select the action that has the highest score. This is more efficient than Q-Learning because it chooses the best action for the current board instead of choosing the best action that yields the best result in the long run. Q-Learning is certainly still improving, but just at a much slower rate.
+
 ## Evaluation
 
 Two factors we take into consideration for evaluation are: the number of lines that are cleared and the level of one game (the number of pieces dropped in the board). In the first few minutes of running the game repeatedly, the number of lines cleared are all 0. Then our AI will start learning that clearing lines result in a higher reward.
